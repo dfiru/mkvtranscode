@@ -7,9 +7,11 @@ class Mkvtranscode
 
   def initialize(movie, destination)
     @destination = destination
-    @movie_file = movie
-    @movie = FFMPEG::Movie.new(movie)
 
+    @movie_file = File.join(@destination,"#{File.basename(movie,'.*')}.mp4")
+    puts movie
+#    @movie = FFMPEG::Movie.new(movie)
+    @movie = FFMPEG::Movie.new(movie)
     @movie.bitrate # 481 (bitrate in kb/s)
     puts @movie.duration # 7.5 (duration of the @movie in seconds)
     puts @movie.size # 455546 (filesize in bytes)
@@ -32,7 +34,7 @@ class Mkvtranscode
   
   def transcode
     options = {custom: "-profile:v high -level 4.1"}
-    movie.transcode("#{destination}/#{moviefile}", options) { |progress| puts progress ;puts "#{10/progress/60} minutes left"; sleep 10}
+    @movie.transcode(@movie_file, options) { |progress| puts progress ;puts "#{10/progress/60} minutes left"; sleep 10}
 
   end
 end
@@ -69,6 +71,7 @@ if __FILE__ == $0
       movie_file = movie_file.to_s.chomp.gsub(/\s/, '\ ')
       puts movie_file
       mkv = Mkvtranscode.new(movie_file, destination)  
+      mkv.transcode
     end
   end
 end
