@@ -33,7 +33,7 @@ class Mkvtranscode
   end
   
   def transcode
-    options = {custom: "-profile:v high -level 4.1 -threads 0"}
+    options = {custom: "-strict -2 -profile:v high -level 4.1 -threads 0"}
     t = Time.now
     @movie.transcode(@movie_file, options) do |progress| 
       puts progress 
